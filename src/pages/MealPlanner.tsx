@@ -1,5 +1,6 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MealPlanForm from '@/components/MealPlanForm';
@@ -10,6 +11,17 @@ import { toast } from '@/hooks/use-toast';
 const MealPlanner = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [mealPlan, setMealPlan] = useState(null);
+  const location = useLocation();
+  const [isEntering, setIsEntering] = useState(true);
+
+  useEffect(() => {
+    // Reset the entering state after animation
+    const timer = setTimeout(() => {
+      setIsEntering(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleGenerateMealPlan = (formData) => {
     setIsGenerating(true);
@@ -82,12 +94,37 @@ const MealPlanner = () => {
     }, 3000);
   };
 
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      y: location.state?.fromHero || location.state?.fromHowItWorks ? 20 : 0,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-24 pb-16">
+      <motion.div
+        initial="initial"
+        animate="animate"
+        variants={pageVariants}
+        className="pt-24 pb-16"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">
               Your AI Nutritionist
             </h1>
@@ -95,19 +132,29 @@ const MealPlanner = () => {
               Tell us your dietary preferences, health goals, and budget constraints. 
               Our AI will create a personalized meal plan optimized just for you.
             </p>
-          </div>
+          </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-5">
+            <motion.div 
+              className="lg:col-span-5"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
               <MealPlanForm onSubmit={handleGenerateMealPlan} isLoading={isGenerating} />
-            </div>
+            </motion.div>
             
-            <div className="lg:col-span-7">
+            <motion.div 
+              className="lg:col-span-7"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
               <MealPlanResults isLoading={isGenerating} mealPlan={mealPlan} />
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
       
       <AIAssistant />
       <Footer />

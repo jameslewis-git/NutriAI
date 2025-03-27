@@ -1,8 +1,26 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
-import React, { useEffect, useRef } from 'react';
+interface MealPlan {
+  name: string;
+  age: number;
+  budget: string;
+  meals: {
+    day: string;
+    meal: string;
+    price: string;
+    nutrition: string;
+  }[];
+}
 
 const Hero = () => {
   const heroBgRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+  const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -20,6 +38,42 @@ const Hero = () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
+
+  // Fetch user's meal plan when component mounts or user changes
+  useEffect(() => {
+    const fetchUserMealPlan = async () => {
+      if (user) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/meal-plans/user/${user.id}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setMealPlan(data);
+          }
+        } catch (error) {
+          console.error('Error fetching meal plan:', error);
+        }
+      }
+    };
+
+    fetchUserMealPlan();
+  }, [user]);
+
+  const handleGeneratePlan = async () => {
+    setIsLoading(true);
+    if (!user) {
+      // If user is not logged in, redirect to login
+      navigate('/login');
+      return;
+    }
+    // Add a small delay to show the loading state
+    await new Promise(resolve => setTimeout(resolve, 800));
+    navigate('/meal-planner', { state: { fromHero: true } });
+  };
   
   return (
     <section className="relative min-h-screen flex items-center py-20 overflow-hidden">
@@ -51,10 +105,25 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="button-primary">
-                Generate My Diet Plan
+              <button 
+                onClick={handleGeneratePlan}
+                disabled={isLoading}
+                className="button-primary hover:scale-105 transform transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[200px]"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  'Generate My Diet Plan'
+                )}
               </button>
-              <button className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg transition-all duration-300 hover:bg-gray-50">
+              <button 
+                onClick={() => navigate('/pricing')}
+                disabled={isLoading}
+                className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg transition-all duration-300 hover:bg-gray-50 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
                 Learn More
               </button>
             </div>
@@ -86,34 +155,46 @@ const Hero = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold">Weekly Meal Plan</h3>
-                  <p className="text-sm text-gray-500">For Sarah, 32 - Budget: $60/week</p>
+                  <p className="text-sm text-gray-500">
+                    {mealPlan 
+                      ? `For ${mealPlan.name}, ${mealPlan.age} - Budget: ${mealPlan.budget}/week`
+                      : 'Create your personalized meal plan'}
+                  </p>
                 </div>
               </div>
               
               <div className="space-y-4">
-                {[
-                  { day: 'Monday', meal: 'Mediterranean Bowl', price: '$8.25', nutrition: 'Protein: 22g • Carbs: 45g • Fat: 15g' },
-                  { day: 'Tuesday', meal: 'Sesame Tofu Stir-Fry', price: '$7.50', nutrition: 'Protein: 18g • Carbs: 38g • Fat: 12g' },
-                  { day: 'Wednesday', meal: 'Chicken & Veggie Soup', price: '$9.15', nutrition: 'Protein: 24g • Carbs: 32g • Fat: 10g' }
-                ].map((item, index) => (
-                  <div key={index} className="glass-card p-4 flex justify-between items-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <div>
-                      <span className="text-sm font-medium text-gray-500">{item.day}</span>
-                      <h4 className="font-medium">{item.meal}</h4>
-                      <p className="text-xs text-gray-500">{item.nutrition}</p>
+                {mealPlan ? (
+                  mealPlan.meals.map((item, index) => (
+                    <div key={index} className="glass-card p-4 flex justify-between items-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                      <div>
+                        <span className="text-sm font-medium text-gray-500">{item.day}</span>
+                        <h4 className="font-medium">{item.meal}</h4>
+                        <p className="text-xs text-gray-500">{item.nutrition}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-semibold text-primary">{item.price}</span>
+                        <button className="block text-xs text-gray-500 hover:text-primary mt-1">View Recipe</button>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-lg font-semibold text-primary">{item.price}</span>
-                      <button className="block text-xs text-gray-500 hover:text-primary mt-1">View Recipe</button>
-                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">
+                      {user 
+                        ? 'Generate your first meal plan!'
+                        : 'Login to create your personalized meal plan'}
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
               
               <div className="mt-4 text-center">
-                <button className="text-sm text-primary font-medium hover:underline">
-                  View Full Weekly Plan →
-                </button>
+                {mealPlan && (
+                  <button className="text-sm text-primary font-medium hover:underline">
+                    View Full Weekly Plan →
+                  </button>
+                )}
               </div>
             </div>
           </div>

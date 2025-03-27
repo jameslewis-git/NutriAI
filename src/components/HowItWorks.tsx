@@ -1,6 +1,6 @@
-
-import React, { useEffect, useRef } from 'react';
-import { PencilLine, Cpu, CheckCircle } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { PencilLine, Cpu, CheckCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Step {
   number: number;
@@ -10,6 +10,8 @@ interface Step {
 }
 
 const HowItWorks = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const steps: Step[] = [
     {
       number: 1,
@@ -33,6 +35,13 @@ const HowItWorks = () => {
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handleGetStarted = async () => {
+    setIsLoading(true);
+    // Add a small delay to show the loading state
+    await new Promise(resolve => setTimeout(resolve, 800));
+    navigate('/meal-planner', { state: { fromHowItWorks: true } });
+  };
 
   useEffect(() => {
     // Add initial classes to make steps visible even without animation
@@ -70,51 +79,48 @@ const HowItWorks = () => {
   }, []);
 
   return (
-    <section id="how-it-works" className="py-20 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
+    <section className="py-20 bg-gray-50" ref={sectionRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+        <div className="text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Three simple steps to create your personalized, budget-friendly meal plan
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Get started with NutriAI in three simple steps
           </p>
         </div>
-        
-        <div className="relative">
-          {/* Connecting line for desktop */}
-          <div className="absolute top-1/3 left-0 right-0 h-px bg-primary/20 hidden lg:block"></div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
-            {steps.map((step, index) => (
-              <div 
-                key={index}
-                ref={(el) => (stepsRef.current[index] = el)}
-                className="opacity-100 transition-all duration-500 ease-out flex flex-col items-center"
-                style={{ transitionDelay: `${index * 0.2}s` }}
-              >
-                <div className="mb-5">
-                  <div className="bg-primary/10 text-primary rounded-full px-4 py-1 text-sm font-medium">
-                    Step {step.number}
-                  </div>
-                </div>
-                
-                <div className="mb-6 h-24 w-24 rounded-full bg-white dark:bg-primary/5 border border-primary/20 shadow-lg flex items-center justify-center text-primary">
-                  {step.icon}
-                </div>
-                
-                <div className="text-center max-w-xs">
-                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
-                </div>
+
+        <div className="mt-16 grid gap-8 md:grid-cols-3">
+          {steps.map((step, index) => (
+            <div
+              key={step.number}
+              ref={el => stepsRef.current[index] = el}
+              className="relative p-6 bg-white rounded-xl shadow-sm opacity-0 transition-opacity duration-500"
+              style={{ transitionDelay: `${index * 200}ms` }}
+            >
+              <div className="flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-lg mb-4">
+                {step.icon}
               </div>
-            ))}
-          </div>
+              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+              <p className="text-gray-600">{step.description}</p>
+            </div>
+          ))}
         </div>
-        
+
         <div className="mt-16 text-center">
-          <button className="button-primary">
-            Get Started Now
+          <button 
+            onClick={handleGetStarted}
+            disabled={isLoading}
+            className="button-primary hover:scale-105 transform transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center min-w-[200px]"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Getting Started...
+              </>
+            ) : (
+              'Get Started Now'
+            )}
           </button>
         </div>
       </div>
