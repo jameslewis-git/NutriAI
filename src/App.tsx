@@ -1,10 +1,9 @@
-import React from 'react';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import React, { useEffect } from 'react';
+import { Toaster } from "./components/ui/toaster";
+import { Toaster as Sonner } from "./components/ui/sonner";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MealPlanner from "./pages/MealPlanner";
@@ -17,7 +16,7 @@ import { AnimatePresence } from 'framer-motion';
 import { PageTransition } from './components/PageTransition';
 import Navbar from './components/Navbar';
 import { LoginPage } from './pages/LoginPage';
-import Layout from './components/Layout';
+import { Layout } from './components/Layout';
 import Hero from './components/Hero';
 import Profile from './pages/Profile';
 import ProfileIcon from './components/ProfileIcon';
@@ -113,7 +112,6 @@ const App = () => {
               </AnimatePresence>
             </Layout>
           </Router>
-          <AIChatbot />
         </TooltipProvider>
       </QueryClientProvider>
     </AuthProvider>

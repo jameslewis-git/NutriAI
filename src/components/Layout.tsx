@@ -3,23 +3,25 @@ import { AIAssistantButton } from './AIAssistantButton';
 import { ProfileSection } from './ProfileSection';
 import { useAuth } from '../contexts/AuthContext';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
 
   return (
-    <div className="relative min-h-screen">
-      <ProfileSection />
-      {/* Main Content */}
-      <main>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Your existing header/navigation here */}
+      
+      {/* Main content */}
+      <main className="flex-1">
         {children}
       </main>
       
+      {/* Footer if you have one */}
+      
       {/* AI Assistant Button - always visible */}
       <AIAssistantButton />
+      
+      {/* ProfileSection if needed */}
+      {user && <ProfileSection />}
     </div>
   );
 };
