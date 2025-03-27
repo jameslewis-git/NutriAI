@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import { SignupPage } from './pages/SignupPage';
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition } from './components/PageTransition';
 import Navbar from './components/Navbar';
+import { LoginPage } from './pages/LoginPage';
 
 const queryClient = new QueryClient();
 
@@ -86,6 +88,14 @@ const App = () => {
                   element={
                     <PageTransition>
                       <SignupPage />
+                    </PageTransition>
+                  } 
+                />
+                <Route 
+                  path="/login" 
+                  element={
+                    <PageTransition>
+                      <LoginPage />
                     </PageTransition>
                   } 
                 />
