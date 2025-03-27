@@ -1783,55 +1783,55 @@ const Hero = () => {
   const sampleMealPlans = [
     {
       title: "Budget-Friendly Plan",
-      budget: "₹2000/week",
+      budget: "₹500/week",  // Reduced from ₹2000
       meals: [
         {
-          name: "Dal Rice with Mixed Vegetables",
-          nutrition: "Protein: 15g • Carbs: 45g • Fat: 8g"
+          name: "Simple Dal Rice",
+          nutrition: "Protein: 12g • Carbs: 40g • Fat: 6g"
         },
         {
-          name: "Mixed Veg Roti",
-          nutrition: "Protein: 12g • Carbs: 35g • Fat: 10g"
+          name: "Basic Veg Roti",
+          nutrition: "Protein: 10g • Carbs: 30g • Fat: 8g"
         },
         {
-          name: "Chole Rice",
-          nutrition: "Protein: 16g • Carbs: 42g • Fat: 12g"
+          name: "Plain Chole Rice",
+          nutrition: "Protein: 14g • Carbs: 38g • Fat: 10g"
         }
       ]
     },
     {
       title: "Standard Plan",
-      budget: "₹4000/week",
+      budget: "₹1000/week",  // Reduced from ₹4000
       meals: [
         {
-          name: "Paneer Butter Masala with Naan",
-          nutrition: "Protein: 18g • Carbs: 22g • Fat: 14g"
+          name: "Dal Tadka with Rice",
+          nutrition: "Protein: 15g • Carbs: 42g • Fat: 10g"
         },
         {
-          name: "Dal Tadka with Jeera Rice",
-          nutrition: "Protein: 15g • Carbs: 45g • Fat: 8g"
+          name: "Mixed Veg Curry with Roti",
+          nutrition: "Protein: 12g • Carbs: 35g • Fat: 8g"
         },
         {
-          name: "Vegetable Biryani",
-          nutrition: "Protein: 14g • Carbs: 48g • Fat: 16g"
+          name: "Basic Vegetable Pulao",
+          nutrition: "Protein: 10g • Carbs: 45g • Fat: 12g"
         }
       ]
     },
     {
       title: "Premium Plan",
-      budget: "₹6000/week",
+      budget: "₹1500/week",  // Reduced from ₹6000
       meals: [
         {
-          name: "Grilled Paneer with Quinoa",
-          nutrition: "Protein: 24g • Carbs: 32g • Fat: 18g"
+          name: "Paneer Rice Bowl",
+          nutrition: "Protein: 18g • Carbs: 40g • Fat: 14g"
         },
         {
-          name: "Mixed Vegetable Curry with Brown Rice",
-          nutrition: "Protein: 16g • Carbs: 38g • Fat: 12g"
+          name: "Vegetable Curry with Paratha",
+          nutrition: "Protein: 14g • Carbs: 38g • Fat: 12g"
         },
         {
-          name: "Mushroom Masala with Multi-grain Roti",
-          nutrition: "Protein: 18g • Carbs: 42g • Fat: 14g"
+          name: "Mixed Dal with Jeera Rice",
+          nutrition: "Protein: 16g • Carbs: 42g • Fat: 10g"
         }
       ]
     }

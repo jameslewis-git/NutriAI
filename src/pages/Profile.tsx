@@ -86,17 +86,17 @@ const Profile = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-b from-background to-background/50 py-12 px-4 dark:from-gray-950 dark:to-gray-900"
+      className="min-h-screen bg-gradient-to-b from-background to-background/50 py-12 px-4 dark:from-gray-900 dark:to-gray-800"
     >
       <div className="max-w-5xl mx-auto">
         {/* Profile Header */}
         <motion.div 
           initial={{ y: -20 }}
           animate={{ y: 0 }}
-          className="bg-card rounded-2xl shadow-xl p-8 mb-8 relative overflow-hidden dark:bg-gray-800/50 dark:border dark:border-gray-700"
+          className="bg-card rounded-2xl shadow-md p-8 mb-8 relative overflow-hidden dark:bg-gray-800/30 dark:border dark:border-gray-700/50"
         >
           {/* Background Pattern */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-violet-500/5 rounded-full blur-3xl dark:from-primary/10 dark:to-violet-500/10" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-violet-500/5 rounded-full blur-3xl dark:from-primary/5 dark:to-violet-500/5" />
           
           <div className="relative flex items-center gap-8">
             <motion.div 
@@ -109,13 +109,13 @@ const Profile = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold text-foreground dark:text-white">{user?.name}</h1>
+                  <h1 className="text-3xl font-bold text-foreground dark:text-gray-100">{user?.name}</h1>
                   <p className="text-muted-foreground dark:text-gray-400">{user?.email}</p>
                 </div>
                 <Button
                   onClick={() => setIsEditing(!isEditing)}
                   variant={isEditing ? "destructive" : "outline"}
-                  className="flex items-center gap-2 dark:border-gray-600"
+                  className="flex items-center gap-2 dark:border-gray-600/50 dark:text-gray-300"
                 >
                   {isEditing ? (
                     <>
@@ -157,7 +157,7 @@ const Profile = () => {
           onValueChange={setActiveTab}
           className="space-y-8"
         >
-          <TabsList className="grid grid-cols-4 gap-4 bg-card p-2 rounded-xl shadow-lg dark:bg-gray-800/50 dark:border dark:border-gray-700">
+          <TabsList className="grid grid-cols-4 gap-4 bg-card p-2 rounded-xl shadow-md dark:bg-gray-800/30 dark:border dark:border-gray-700/50">
             {[
               { id: 'personal', label: 'Personal', icon: User },
               { id: 'nutrition', label: 'Nutrition', icon: Apple },
@@ -171,8 +171,8 @@ const Profile = () => {
               >
                 <TabsTrigger
                   value={tab.id}
-                  className={`w-full py-3 flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700/50 ${
-                    activeTab === tab.id ? 'bg-primary text-white dark:bg-primary dark:text-white' : 'hover:bg-gray-50'
+                  className={`w-full py-3 flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:bg-gray-700/30 ${
+                    activeTab === tab.id ? 'bg-primary/90 text-white dark:bg-primary/80 dark:text-white' : 'hover:bg-gray-50'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -194,7 +194,7 @@ const Profile = () => {
                 className="grid md:grid-cols-2 gap-8"
               >
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium text-foreground dark:text-gray-300">Personal Information</Label>
+                  <Label className="text-foreground dark:text-gray-300">Personal Information</Label>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-foreground dark:text-gray-300">Full Name</Label>
@@ -202,7 +202,7 @@ const Profile = () => {
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled={!isEditing}
                       />
                     </div>
@@ -212,7 +212,7 @@ const Profile = () => {
                         id="email"
                         type="email"
                         value={formData.email}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled
                       />
                     </div>
@@ -220,7 +220,7 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium text-foreground dark:text-gray-300">Account Settings</Label>
+                  <Label className="text-foreground dark:text-gray-300">Account Settings</Label>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="age" className="text-foreground dark:text-gray-300">Age</Label>
@@ -229,7 +229,7 @@ const Profile = () => {
                         type="number"
                         value={formData.age}
                         onChange={(e) => setFormData({...formData, age: e.target.value})}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled={!isEditing}
                       />
                     </div>
@@ -240,7 +240,7 @@ const Profile = () => {
                         type="number"
                         value={formData.weeklyBudget}
                         onChange={(e) => setFormData({...formData, weeklyBudget: e.target.value})}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled={!isEditing}
                       />
                     </div>
@@ -257,7 +257,7 @@ const Profile = () => {
               >
                 {/* Nutrition Content */}
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium text-foreground dark:text-gray-300">Body Metrics</Label>
+                  <Label className="text-foreground dark:text-gray-300">Body Metrics</Label>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="height" className="text-foreground dark:text-gray-300">Height (cm)</Label>
@@ -266,7 +266,7 @@ const Profile = () => {
                         type="number"
                         value={formData.height}
                         onChange={(e) => setFormData({...formData, height: e.target.value})}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled={!isEditing}
                       />
                     </div>
@@ -277,7 +277,7 @@ const Profile = () => {
                         type="number"
                         value={formData.weight}
                         onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                        className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                         disabled={!isEditing}
                       />
                     </div>
@@ -285,9 +285,9 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium text-foreground dark:text-gray-300">Activity Level</Label>
+                  <Label className="text-foreground dark:text-gray-300">Activity Level</Label>
                   <select
-                    className="w-full p-2 border rounded-lg border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="w-full p-2 border rounded-lg border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                     value={formData.activityLevel}
                     onChange={(e) => setFormData({...formData, activityLevel: e.target.value})}
                     disabled={!isEditing}
@@ -304,11 +304,11 @@ const Profile = () => {
 
             <TabsContent value="metrics" className="space-y-6">
               <div className="grid grid-cols-1 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <div className="bg-gray-50 dark:bg-gray-800/30 p-4 rounded-lg">
                   <h3 className="font-semibold mb-4 text-foreground dark:text-white">Health Metrics History</h3>
                   <div className="space-y-4">
                     {formData.healthMetrics.map((metric, index) => (
-                      <div key={index} className="bg-white dark:bg-gray-700 p-4 rounded-md shadow-sm">
+                      <div key={index} className="bg-white dark:bg-gray-700/30 p-4 rounded-md shadow-sm">
                         <div className="flex justify-between items-center">
                           <span className="text-gray-500 dark:text-gray-400">{metric.date}</span>
                           <span className="font-medium text-foreground dark:text-white">{metric.weight} kg</span>
@@ -353,7 +353,7 @@ const Profile = () => {
                           }
                         }}
                         disabled={!isEditing}
-                        className="dark:border-gray-600 dark:text-gray-300"
+                        className="dark:border-gray-600/50 dark:text-gray-300"
                       >
                         {pref.name}
                       </Button>
@@ -369,7 +369,7 @@ const Profile = () => {
                     value={formData.allergies.join(', ')}
                     onChange={(e) => setFormData({...formData, allergies: e.target.value.split(',')})}
                     disabled={!isEditing}
-                    className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                   />
                 </div>
 
@@ -381,7 +381,7 @@ const Profile = () => {
                     value={formData.favoriteIngredients.join(', ')}
                     onChange={(e) => setFormData({...formData, favoriteIngredients: e.target.value.split(',')})}
                     disabled={!isEditing}
-                    className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                   />
                 </div>
 
@@ -393,7 +393,7 @@ const Profile = () => {
                     value={formData.dislikedIngredients.join(', ')}
                     onChange={(e) => setFormData({...formData, dislikedIngredients: e.target.value.split(',')})}
                     disabled={!isEditing}
-                    className="border-gray-200 focus:ring-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    className="border-gray-200 focus:ring-primary dark:bg-gray-800/50 dark:border-gray-600/50 dark:text-gray-200"
                   />
                 </div>
               </div>
@@ -411,13 +411,13 @@ const Profile = () => {
             <Button
               variant="outline"
               onClick={() => setIsEditing(false)}
-              className="px-6 dark:border-gray-600 dark:text-gray-300"
+              className="px-6 dark:border-gray-600/50 dark:text-gray-300"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
-              className="bg-primary text-white px-6 hover:bg-primary/90"
+              className="bg-primary/90 text-white hover:bg-primary/80 px-6"
             >
               Save Changes
             </Button>

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export const BotCharacter = () => {
   return (
     <motion.div 
-      className="relative w-12 h-12"
+      className="relative w-10 h-10"
       animate={{
         y: [0, -3, 0]
       }}
@@ -14,7 +14,6 @@ export const BotCharacter = () => {
         ease: "easeInOut"
       }}
     >
-      {/* Bot SVG */}
       <svg
         viewBox="0 0 120 120"
         fill="none"
@@ -134,6 +133,37 @@ export const BotCharacter = () => {
           }}
           transition={{
             duration: 1,
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Antenna */}
+        <motion.path
+          d="M60 10V5"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          className="text-primary"
+          animate={{
+            scaleY: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+          }}
+        />
+        <motion.circle
+          cx="60"
+          cy="3"
+          r="2"
+          fill="currentColor"
+          className="text-primary"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [1, 0.7, 1],
+          }}
+          transition={{
+            duration: 1.5,
             repeat: Infinity,
           }}
         />

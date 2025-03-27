@@ -21,6 +21,7 @@ import Layout from './components/Layout';
 import Hero from './components/Hero';
 import Profile from './pages/Profile';
 import ProfileIcon from './components/ProfileIcon';
+import AIChatbot from './components/AIChatbot';
 
 const queryClient = new QueryClient();
 
@@ -112,6 +113,7 @@ const App = () => {
               </AnimatePresence>
             </Layout>
           </Router>
+          <AIChatbot />
         </TooltipProvider>
       </QueryClientProvider>
     </AuthProvider>
