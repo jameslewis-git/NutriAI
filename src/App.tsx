@@ -17,6 +17,10 @@ import { AnimatePresence } from 'framer-motion';
 import { PageTransition } from './components/PageTransition';
 import Navbar from './components/Navbar';
 import { LoginPage } from './pages/LoginPage';
+import Layout from './components/Layout';
+import Hero from './components/Hero';
+import Profile from './pages/Profile';
+import ProfileIcon from './components/ProfileIcon';
 
 const queryClient = new QueryClient();
 
@@ -40,69 +44,73 @@ const App = () => {
           <Toaster />
           <Sonner />
           <Router>
-            <Navbar />
-            <AnimatePresence mode="wait">
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <PageTransition>
-                      <Index />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/meal-planner" 
-                  element={
-                    <PageTransition>
-                      <MealPlanner />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/dashboard" 
-                  element={
-                    <PageTransition>
-                      <Dashboard />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/groceries" 
-                  element={
-                    <PageTransition>
-                      <Groceries />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/pricing" 
-                  element={
-                    <PageTransition>
-                      <Pricing />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/signup" 
-                  element={
-                    <PageTransition>
-                      <SignupPage />
-                    </PageTransition>
-                  } 
-                />
-                <Route 
-                  path="/login" 
-                  element={
-                    <PageTransition>
-                      <LoginPage />
-                    </PageTransition>
-                  } 
-                />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AnimatePresence>
+            <Layout>
+              <Navbar />
+              <ProfileIcon />
+              <AnimatePresence mode="wait">
+                <Routes>
+                  <Route path="/" element={<Hero />} />
+                  <Route 
+                    path="/meal-planner" 
+                    element={
+                      <PageTransition>
+                        <MealPlanner />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <PageTransition>
+                        <Dashboard />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/groceries" 
+                    element={
+                      <PageTransition>
+                        <Groceries />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/pricing" 
+                    element={
+                      <PageTransition>
+                        <Pricing />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/signup" 
+                    element={
+                      <PageTransition>
+                        <SignupPage />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/login" 
+                    element={
+                      <PageTransition>
+                        <LoginPage />
+                      </PageTransition>
+                    } 
+                  />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <PageTransition>
+                        <Profile />
+                      </PageTransition>
+                    } 
+                  />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AnimatePresence>
+            </Layout>
           </Router>
         </TooltipProvider>
       </QueryClientProvider>

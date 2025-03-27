@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, PencilIcon, X, Save, User, Settings, ChevronRight, LogOut, MessageCircle, Bot } from 'lucide-react';
+import { Loader2, PencilIcon, X, Save, User, Settings, ChevronRight, LogOut, MessageCircle, Bot, DollarSign, Brain, ActivitySquare } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserInfoForm, UserInfoFormValues } from './UserInfoForm';
@@ -11,13 +11,8 @@ import { toast } from './ui/use-toast';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Send } from 'lucide-react';
-
-interface User {
-  name?: string;
-  email?: string;
-  age?: number;
-  // other user properties
-}
+import { User as UserType } from '../types/user';
+import { ProfileSection, WelcomeText } from './ProfileSection';
 
 interface MealDay {
   day: string;
@@ -55,13 +50,13 @@ interface Message {
 
 const MotionDiv = motion.div;
 
-// Add this new component for the simple bot character
-const SimpleBotCharacter = () => {
+// Add this new component for the bot character
+const BotCharacter = () => {
   return (
     <motion.div 
       className="relative w-12 h-12"
       animate={{
-        y: [0, -2, 0]
+        y: [0, -3, 0]
       }}
       transition={{
         duration: 2,
@@ -69,131 +64,131 @@ const SimpleBotCharacter = () => {
         ease: "easeInOut"
       }}
     >
-      <svg 
-        viewBox="0 0 48 48" 
-        fill="none" 
+      {/* Bot SVG */}
+      <svg
+        viewBox="0 0 120 120"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full"
       >
         {/* Body */}
-        <rect x="12" y="20" width="24" height="20" rx="8" fill="currentColor" />
-        
-        {/* Head */}
-        <circle cx="24" cy="14" r="8" fill="currentColor" />
-        
-        {/* Eyes */}
-        <circle cx="20" cy="13" r="2" fill="white" />
-        <circle cx="28" cy="13" r="2" fill="white" />
-        
-        {/* Smile */}
-        <path
-          d="M20 16c2 1.5 6 1.5 8 0"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
+        <motion.path
+          d="M35 50h50v45c0 5.523-4.477 10-10 10H45c-5.523 0-10-4.477-10-10V50z"
+          fill="currentColor"
+          className="text-primary"
         />
         
-        {/* Antenna */}
+        {/* Head */}
         <motion.path
-          d="M24 6v-2"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
+          d="M30 40c0-16.569 13.431-30 30-30s30 13.431 30 30v10H30V40z"
+          fill="currentColor"
+          className="text-primary"
+        />
+        
+        {/* Eyes */}
+        <motion.circle
+          cx="45"
+          cy="35"
+          r="5"
+          fill="white"
           animate={{
-            rotate: [-10, 10, -10]
+            scale: [1, 1.2, 1],
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
-            ease: "easeInOut"
+          }}
+        />
+        <motion.circle
+          cx="75"
+          cy="35"
+          r="5"
+          fill="white"
+          animate={{
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        />
+        
+        {/* Mouth */}
+        <motion.path
+          d="M50 45h20"
+          stroke="white"
+          strokeWidth="3"
+          strokeLinecap="round"
+          animate={{
+            d: ["M50 45h20", "M50 48c5 5 15 5 20 0", "M50 45h20"],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        />
+        
+        {/* Arms */}
+        <motion.path
+          d="M25 60c-5.523 0-10-4.477-10-10s4.477-10 10-10"
+          stroke="currentColor"
+          strokeWidth="8"
+          strokeLinecap="round"
+          className="text-primary"
+          animate={{
+            rotate: [-10, 10, -10],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        />
+        <motion.path
+          d="M95 60c5.523 0 10-4.477 10-10s-4.477-10-10-10"
+          stroke="currentColor"
+          strokeWidth="8"
+          strokeLinecap="round"
+          className="text-primary"
+          animate={{
+            rotate: [10, -10, 10],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        />
+        
+        {/* Legs */}
+        <motion.path
+          d="M45 105c0 5.523-4.477 10-10 10s-10-4.477-10-10"
+          stroke="currentColor"
+          strokeWidth="8"
+          strokeLinecap="round"
+          className="text-primary"
+          animate={{
+            rotate: [-5, 5, -5],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+          }}
+        />
+        <motion.path
+          d="M75 105c0 5.523 4.477 10 10 10s10-4.477 10-10"
+          stroke="currentColor"
+          strokeWidth="8"
+          strokeLinecap="round"
+          className="text-primary"
+          animate={{
+            rotate: [5, -5, 5],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
           }}
         />
       </svg>
     </motion.div>
-  );
-};
-
-// Update the AIAssistantButton component
-const AIAssistantButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState<string | null>("👋 Need nutrition advice? Ask me anything!");
-  const [showDialog, setShowDialog] = useState(false);
-  
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-  
-  return (
-    <>
-      <div className="fixed bottom-6 right-6 z-50">
-        {/* Floating message bubble */}
-        <AnimatePresence>
-          {message && (
-            <motion.div 
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.9 }}
-              className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg p-3 mb-2 w-64"
-            >
-              <div className="flex items-start gap-2">
-                <SimpleBotCharacter />
-                <p className="text-sm text-gray-700 mt-1">{message}</p>
-              </div>
-              <div className="absolute bottom-[-6px] right-4 w-3 h-3 bg-white transform rotate-45"></div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Button */}
-        <motion.button
-          onClick={() => setShowDialog(true)}
-          onMouseEnter={() => setMessage("👋 Need nutrition advice? Ask me anything!")}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-primary text-white p-2 shadow-lg flex items-center justify-center group relative rounded-xl"
-        >
-          <SimpleBotCharacter />
-        </motion.button>
-      </div>
-
-      {/* Chat Dialog */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-[500px] h-[600px] p-0 gap-0">
-          <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <SimpleBotCharacter />
-                <h1 className="font-medium">AI Nutritionist</h1>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowDialog(false)}
-                className="rounded-full"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Rest of the dialog content remains the same */}
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-              <ChatMessages />
-            </div>
-
-            <div className="border-t border-gray-200 bg-white p-4">
-              <ChatInput onSend={() => {}} />
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
   );
 };
 
@@ -230,7 +225,7 @@ const ChatMessages = () => {
               {message.type === 'user' ? (
                 <User className="h-4 w-4 text-white" />
               ) : (
-                <Bot className="h-4 w-4 text-primary" />
+                <BotCharacter />
               )}
             </div>
             <div
@@ -252,7 +247,7 @@ const ChatMessages = () => {
         <div className="flex justify-start">
           <div className="flex max-w-[80%] flex-row">
             <div className="flex items-center justify-center rounded-full w-8 h-8 flex-shrink-0 bg-primary/10 mr-2">
-              <Bot className="h-4 w-4 text-primary" />
+              <BotCharacter />
             </div>
             <div className="p-3 rounded-lg bg-white border border-gray-200 shadow-sm rounded-tl-none">
               <div className="flex items-center">
@@ -330,6 +325,7 @@ const Hero = () => {
   const [editPopoverAnchor, setEditPopoverAnchor] = useState<{x: number, y: number} | null>(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -593,17 +589,13 @@ const Hero = () => {
         >
           {/* Welcome Badge */}
           <motion.div 
-            className="inline-block"
+            className="inline-block relative"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.3 }}
           >
-            <div className="px-6 py-3 rounded-full bg-white/80 border border-primary/20 backdrop-blur-sm shadow-xl">
-              <span className="text-primary font-medium text-lg flex items-center gap-2">
-                <span className="animate-wave">👋</span>
-                Welcome back, <span className="font-bold text-primary">{user.name}</span>!
-              </span>
-            </div>
+            <WelcomeText onProfileClick={() => setShowProfile(!showProfile)} />
+            {showProfile && <ProfileSection />}
           </motion.div>
           
           {/* Main Content */}
@@ -684,9 +676,6 @@ const Hero = () => {
                 </svg>
                 Dashboard
               </Button>
-              
-              {/* Profile Button & Dropdown */}
-              <ProfileSection />
             </div>
           </motion.div>
 
@@ -1633,120 +1622,256 @@ const Hero = () => {
     );
   };
 
-  // Here's the updated profile section with proper TypeScript types
-  const ProfileSection = () => {
-    return (
-      <div className="relative">
-        <button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setShowProfileMenu(!showProfileMenu);
-          }}
-          className="w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-all duration-300"
-          title="User Profile"
-        >
-          <User className="w-5 h-5 text-primary" />
-        </button>
-        
-        {showProfileMenu && (
-          <div 
-            id="profile-menu"
-            className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden z-50"
+  // Add these new sections after the existing content in the Hero component
+  const renderAdditionalSections = () => (
+    <>
+      {/* Nutrition Benefits Section */}
+      <div className="py-16 bg-gradient-to-b from-white to-gray-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            {/* User Info Header */}
-            <div className="bg-gradient-to-r from-primary/10 to-violet-500/10 p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                  <User className="w-6 h-6 text-primary" />
+            <h2 className="text-3xl font-bold mb-4">Smart Meal Planning Benefits</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover how our AI-powered meal planning can transform your nutrition journey
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {nutritionBenefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+              >
+                <div className="text-primary/80 mb-4">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
+                <p className="text-gray-600">{benefit.description}</p>
+                <div className="mt-4 text-sm text-primary font-medium">
+                  {benefit.stats}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Sample Meal Plans Section */}
+      <div className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2 className="text-3xl font-bold mb-4">Sample Meal Plans</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Explore our customizable meal plans designed for different budgets and preferences
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {sampleMealPlans.map((plan, index) => (
+              <motion.div
+                key={plan.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100"
+              >
+                <div className="bg-gradient-to-r from-primary to-violet-500 p-4 text-white">
+                  <h3 className="text-lg font-semibold">{plan.title}</h3>
+                  <p className="text-sm opacity-90">{plan.budget}</p>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-3">
+                    {plan.meals.map((meal, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center mt-0.5">
+                          <span className="text-primary text-sm">•</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{meal.name}</p>
+                          <p className="text-xs text-gray-500">{meal.nutrition}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* AI Features Section */}
+      <div className="py-16 bg-gradient-to-b from-gray-50/50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2 className="text-3xl font-bold mb-4">AI-Powered Features</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Experience the power of AI in your meal planning journey
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {aiFeatures.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex gap-6"
+              >
+                <div className="text-primary/80">
+                  {feature.icon}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800">{user?.name || 'User'}</h3>
-                  <p className="text-sm text-gray-500">{user?.email || 'user@example.com'}</p>
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-gray-600 mb-4">{feature.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {feature.tags.map((tag, idx) => (
+                      <span 
+                        key={idx}
+                        className="px-2 py-1 bg-primary/5 text-primary text-sm rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            {/* User Details */}
-            <div className="p-3 border-b border-gray-100">
-              <div className="text-sm text-gray-500 mb-2">Personal Details</div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="font-medium text-gray-600">Age:</div>
-                <div className="text-gray-800">{user?.age || 30} years</div>
-                
-                <div className="font-medium text-gray-600">Budget:</div>
-                <div className="text-gray-800">₹{Number(mealPlan?.budget?.replace(/[^0-9]/g, '')) || 4000}/week</div>
-              </div>
-            </div>
-            
-            {/* Menu Items */}
-            <div className="divide-y divide-gray-100">
-              <button 
-                onClick={() => setIsEditingInfo(true)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Settings className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium">Edit Plan Settings</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              
-              <button 
-                onClick={() => navigate('/account-settings')}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <User className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium">Account Settings</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-              
-              <button 
-                onClick={() => navigate('/logout')}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-red-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <LogOut className="w-4 h-4 text-red-500" />
-                  <span className="text-sm font-medium text-red-500">Logout</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-              </button>
-            </div>
+              </motion.div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
-    );
-  };
+    </>
+  );
+
+  // Add these arrays outside the component
+  const nutritionBenefits = [
+    {
+      title: "Budget Optimization",
+      description: "Save money while maintaining nutritional quality with our smart budget allocation system",
+      stats: "Average savings of ₹1000/week",
+      icon: <DollarSign className="w-8 h-8" />
+    },
+    {
+      title: "Balanced Nutrition",
+      description: "Get perfectly balanced meals with optimal protein, carbs, and fat ratios",
+      stats: "Meets 100% daily nutritional needs",
+      icon: <ActivitySquare className="w-8 h-8" />
+    },
+    {
+      title: "Smart Recommendations",
+      description: "Receive personalized meal suggestions based on your preferences and dietary needs",
+      stats: "98% user satisfaction rate",
+      icon: <Brain className="w-8 h-8" />
+    }
+  ];
+
+  const sampleMealPlans = [
+    {
+      title: "Budget-Friendly Plan",
+      budget: "₹2000/week",
+      meals: [
+        {
+          name: "Dal Rice with Mixed Vegetables",
+          nutrition: "Protein: 15g • Carbs: 45g • Fat: 8g"
+        },
+        {
+          name: "Mixed Veg Roti",
+          nutrition: "Protein: 12g • Carbs: 35g • Fat: 10g"
+        },
+        {
+          name: "Chole Rice",
+          nutrition: "Protein: 16g • Carbs: 42g • Fat: 12g"
+        }
+      ]
+    },
+    {
+      title: "Standard Plan",
+      budget: "₹4000/week",
+      meals: [
+        {
+          name: "Paneer Butter Masala with Naan",
+          nutrition: "Protein: 18g • Carbs: 22g • Fat: 14g"
+        },
+        {
+          name: "Dal Tadka with Jeera Rice",
+          nutrition: "Protein: 15g • Carbs: 45g • Fat: 8g"
+        },
+        {
+          name: "Vegetable Biryani",
+          nutrition: "Protein: 14g • Carbs: 48g • Fat: 16g"
+        }
+      ]
+    },
+    {
+      title: "Premium Plan",
+      budget: "₹6000/week",
+      meals: [
+        {
+          name: "Grilled Paneer with Quinoa",
+          nutrition: "Protein: 24g • Carbs: 32g • Fat: 18g"
+        },
+        {
+          name: "Mixed Vegetable Curry with Brown Rice",
+          nutrition: "Protein: 16g • Carbs: 38g • Fat: 12g"
+        },
+        {
+          name: "Mushroom Masala with Multi-grain Roti",
+          nutrition: "Protein: 18g • Carbs: 42g • Fat: 14g"
+        }
+      ]
+    }
+  ];
+
+  const aiFeatures = [
+    {
+      title: "Smart Meal Generation",
+      description: "Our AI analyzes your preferences, budget, and nutritional needs to create perfectly balanced meal plans",
+      icon: <Brain className="w-12 h-12" />,
+      tags: ["Personalization", "Nutrition Analysis", "Budget Optimization"]
+    },
+    {
+      title: "Nutritionist Chat",
+      description: "Get instant answers to your nutrition questions from our AI nutritionist",
+      icon: <MessageCircle className="w-12 h-12" />,
+      tags: ["24/7 Support", "Expert Advice", "Personalized Guidance"]
+    },
+    {
+      title: "Dynamic Price Optimization",
+      description: "Automatically adjusts meal plans based on your budget while maintaining nutritional value",
+      icon: <DollarSign className="w-12 h-12" />,
+      tags: ["Cost Effective", "Smart Budgeting", "Value Optimization"]
+    },
+    {
+      title: "Nutrition Tracking",
+      description: "Monitor your daily nutritional intake with detailed breakdowns and insights",
+      icon: <ActivitySquare className="w-12 h-12" />,
+      tags: ["Progress Tracking", "Health Insights", "Goal Setting"]
+    }
+  ];
 
   return (
     <section className="min-h-screen flex flex-col pt-24 relative overflow-hidden">
-      {/* Background Molecules with reduced animation */}
-      <div 
-        ref={heroBgRef} 
-        className="absolute inset-0 bg-hero-gradient -z-10"
-      >
-        {/* Slowed down animations */}
-        <motion.div 
-          className="absolute top-20 left-[10%] w-72 h-72"
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, 45, 0],
-          }}
-          transition={{
-            duration: 40, // Much slower animation
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          <div className="w-full h-full bg-primary/10 rounded-full filter blur-3xl" />
-        </motion.div>
-        
-        {/* Other background molecules with similar slowed animation... */}
+      {/* Remove ProfileSection here */}
+      
+      <div ref={heroBgRef} className="absolute inset-0 bg-hero-gradient -z-10">
+        {/* ... existing background content ... */}
       </div>
 
-      {/* Isolated mouse movement effect */}
       <BackgroundEffect />
 
       <AnimatePresence mode="wait">
@@ -1771,6 +1896,9 @@ const Hero = () => {
         </motion.div>
       </AnimatePresence>
       
+      {/* New sections */}
+      {renderAdditionalSections()}
+      
       <UserInfoForm 
         isOpen={showUserInfoForm}
         onClose={() => setShowUserInfoForm(false)}
@@ -1778,9 +1906,6 @@ const Hero = () => {
       />
       {editPopoverAnchor && <BudgetEditPopover />}
       <EditInfoModal />
-      
-      {/* Add the AI Assistant button */}
-      <AIAssistantButton />
     </section>
   );
 };

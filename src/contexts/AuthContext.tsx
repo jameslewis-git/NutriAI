@@ -1,17 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-}
+import { User } from '../types/user';
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name?: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  updateUser: (userData: Partial<User>) => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -91,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
       // Clear user data from state
       setUser(null);
@@ -109,8 +105,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateUser = async (userData: Partial<User>) => {
+    try {
+      // Here you would typically make an API call to update the user data
+      // For now, we'll just update the local state
+      setUser(prev => prev ? { ...prev, ...userData } : null);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
+  };
+
+  const value = {
+    user,
+    token,
+    login,
+    register,
+    logout,
+    updateUser,
+    isLoading,
+    error
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, isLoading, error }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
